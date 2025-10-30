@@ -6,7 +6,16 @@ import video_analyzer # <-- This imports your cleaned-up file!
 
 # Initialize the Flask app
 app = Flask(__name__)
-CORS(app) # Allows your frontend to talk to this server
+# --- START NEW CORS CONFIG ---
+# This is your live frontend URL
+NETLIFY_URL = "https.helpful-meerkat-c4c17c.netlify.app"
+
+# This tells Flask to only allow requests from your live site
+CORS(app, resources={
+  r"/analyze": {
+    "origins": [NETLIFY_URL, "http://localhost:8000"]
+  }
+})
 
 # Define a folder to temporarily store uploaded videos
 UPLOAD_FOLDER = 'uploads'
