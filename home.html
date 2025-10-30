@@ -146,7 +146,7 @@ reportOutput.style.display = 'none';
 
       try {
         // Send file to Flask server
-        const response = await fetch('httpsfs://remotion-backend-fch1.onrender.com/analyze', {
+        const response = await fetch('https://remotion-backend-fch1.onrender.com/analyze', {
           method: 'POST',
           body: formData
         });
