@@ -1,0 +1,999 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ReMotion — Gamified Motivation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    .top-home-btn {
+      position: absolute;
+      /* stays within page flow, not fixed */
+      top: 20px;
+      right: 30px;
+      background: linear-gradient(135deg, #6C63FF, #FF6CAB);
+      color: white;
+      font-size: 1.4rem;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      box-shadow: 0 0 25px rgba(108, 99, 255, 0.6);
+      transition: all 0.3s ease;
+      z-index: 99;
+    }
+
+    .top-home-btn:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 45px rgba(255, 108, 171, 0.9);
+      background: linear-gradient(135deg, #FF6CAB, #6C63FF);
+    }
+
+    :root {
+      --bg: #07051a;
+      --card: #14163F;
+      --accent1: #6C63FF;
+      --accent2: #FF6CAB;
+      --muted: #C7C3F3;
+      --glass: rgba(255, 255, 255, 0.04);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: radial-gradient(circle at 20% 30%, #0e0b2a 0%, #030114 40%, #000 100%);
+      color: #EDEBFF;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      box-shadow: 0 8px 30px rgba(108, 99, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 0
+    }
+
+    p.subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+      align-items: center
+    }
+
+    /* layout */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 22px;
+    }
+
+    /* Left column */
+    .card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 8px 30px rgba(12, 10, 30, 0.6);
+    }
+
+    .hero {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      padding: 18px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, rgba(108, 99, 255, 0.06), rgba(255, 108, 171, 0.04));
+      border: 1px solid rgba(108, 99, 255, 0.08);
+    }
+
+    .hero .left {
+      flex: 1;
+    }
+
+    .hero h2 {
+      margin: 0;
+      color: #fff;
+      font-size: 20px
+    }
+
+    .hero p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    /* Today's challenge */
+    .challenge {
+      display: flex;
+      gap: 18px;
+      margin-top: 16px;
+      align-items: center;
+    }
+
+    .challenge .info {
+      flex: 1;
+    }
+
+    .timer {
+      font-weight: 700;
+      font-size: 28px;
+      color: var(--accent2);
+      text-shadow: 0 4px 18px rgba(255, 108, 171, 0.12);
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px
+    }
+
+    .btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all .18s;
+      font-weight: 600;
+    }
+
+    .btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5)
+    }
+
+    .btn.primary {
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      color: white;
+      border: none;
+      box-shadow: 0 10px 30px rgba(108, 99, 255, 0.14);
+    }
+
+    /* Tasks */
+    .tasks {
+      margin-top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.00));
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .task input[type="checkbox"] {
+      width: 20px;
+      height: 20px
+    }
+
+    .task .meta {
+      flex: 1
+    }
+
+    .task h4 {
+      margin: 0;
+      font-size: 15px
+    }
+
+    .task p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    /* Progress area */
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-top: 16px
+    }
+
+    .progress-wrap {
+      flex: 1
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.03)
+    }
+
+    .progress-bar .fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      transition: width .5s linear;
+      box-shadow: 0 6px 18px rgba(108, 99, 255, 0.12);
+    }
+
+    .score {
+      min-width: 92px;
+      text-align: center
+    }
+
+    /* Right column */
+    .right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px
+    }
+
+    .ring {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 30% 30%, rgba(108, 99, 255, 0.06), transparent 40%);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .ring svg {
+      transform: rotate(-90deg)
+    }
+
+    .ring .center {
+      position: absolute;
+      text-align: center
+    }
+
+    .center .val {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent2)
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px
+    }
+
+    .badge {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      padding: 6px;
+    }
+
+    .badge.unlocked {
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      color: white;
+      box-shadow: 0 8px 40px rgba(108, 99, 255, 0.12);
+      border: none
+    }
+
+    /* Leaderboard */
+    .leader {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.00));
+      border: 1px solid rgba(255, 255, 255, 0.03)
+    }
+
+    .leader form {
+      display: flex;
+      gap: 8px
+    }
+
+    .leader input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      background: transparent;
+      color: var(--muted)
+    }
+
+    .leader button {
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      color: #fff
+    }
+
+    /* confetti canvas over everything */
+    canvas#confetti {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* responsive */
+    @media (max-width:980px) {
+      .grid {
+        grid-template-columns: 1fr
+      }
+
+      .right-col {
+        flex-direction: row;
+        justify-content: space-between
+      }
+
+      .ring {
+        width: 160px;
+        height: 160px
+      }
+    }
+
+    /* --- Add this to your <style> tag in the <head> --- */
+
+    .add-task-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.00));
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .add-task-form input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      background: transparent;
+      color: var(--muted);
+      font-family: "Poppins", sans-serif;
+      font-size: 14px;
+    }
+
+    .add-task-form input[type="number"] {
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      background: transparent;
+      color: var(--muted);
+      font-family: "Poppins", sans-serif;
+      font-size: 14px;
+    }
+
+    .add-task-form button {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .add-task-form button:hover {
+      transform: scale(1.1);
+    }
+
+    /* Style for the new delete button on tasks */
+    .task {
+      position: relative;
+    }
+    /* --- Add to <style> in gamified.html --- */
+
+/* Add transitions for a smooth animation */
+.task .meta h4, .task .meta p {
+  transition: all 0.4s ease;
+  position: relative; /* Needed for the line-through */
+}
+
+/* This creates the animated line-through */
+.task .meta h4::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%; /* Puts the line in the middle */
+  height: 2px;
+  width: 0; /* Starts at 0 width (hidden) */
+  background: var(--accent2); /* Your theme's pink color */
+  transition: width 0.4s ease;
+}
+
+/* This is the "trigger" */
+.task input[type="checkbox"]:checked + .meta h4::after {
+  width: 100%; /* Animates the line-through to 100% width */
+}
+.task input[type="checkbox"]:checked + .meta h4 {
+  color: var(--muted); /* Fades the title text */
+}
+.task input[type="checkbox"]:checked + .meta p {
+  opacity: 0.5; /* Fades the description text */
+}
+
+    .task .btn-delete-task {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 8px;
+      opacity: 0.4;
+      transition: all 0.2s;
+    }
+
+    .task .btn-delete-task:hover {
+      opacity: 1;
+      color: var(--accent2);
+      transform: scale(1.2);
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="confetti"></canvas>
+  <div class="page">
+
+    <header>
+      <div class="brand">
+        <div class="logo">R</div>
+        <div>
+          <h1>ReMotion</h1>
+          <p class="subtitle">Gamified motivation — make rehab delightful</p>
+        </div>
+      </div>
+      <nav>
+        <div style="color:var(--muted);font-size:13px;padding-right:8px">Logged as <strong
+            id="playerNameHeader">Guest</strong></div>
+        <button class="btn" id="resetAll" title="Reset all progress">Reset</button>
+      </nav>
+    </header>
+
+    <div class="grid">
+      <!-- LEFT -->
+      <div>
+        <div class="card hero">
+          <div class="left">
+            <h2>Today’s Challenge</h2>
+            <p>Complete the tasks below within the timer and earn points & badges.</p>
+
+            <div class="challenge">
+              <div class="info">
+                <div class="timer" id="timerDisplay">20:00</div>
+                <div style="font-size:13px;color:var(--muted);margin-top:6px">Time remaining</div>
+                <div class="controls">
+                  <button class="btn primary" id="startBtn">Start</button>
+                  <button class="btn" id="pauseBtn">Pause</button>
+                  <button class="btn" id="resetBtn">Reset</button>
+                </div>
+              </div>
+              <div style="width:160px;text-align:center">
+                <div style="font-size:13px;color:var(--muted)">Challenge Progress</div>
+                <div style="margin-top:12px">
+                  <svg width="120" height="120" viewBox="0 0 36 36">
+                    <path d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831 15.9155 15.9155 0 1 0 0-31.831" fill="none"
+                      stroke="rgba(255,255,255,0.06)" stroke-width="2" />
+                    <path id="ringPath" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831" fill="none" stroke="#6C63FF"
+                      stroke-width="2" stroke-dasharray="0 100" stroke-linecap="round" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <form id="add-task-form" onsubmit="return false;">
+              <input id="new-task-title" type="text" placeholder="Enter a new task title...">
+              <input id="new-task-points" type="number" placeholder="Pts" style="width: 70px;">
+              <button id="add-task-button" type="submit" title="Add Task">+</button>
+            </form>
+            <div class="tasks" id="tasksList">
+
+            </div>
+
+            <div class="progress-row">
+              <div class="progress-wrap">
+                <div class="progress-bar" aria-hidden="true">
+                  <div class="fill" id="progressFill"></div>
+                </div>
+              </div>
+              <div class="score">
+                <div style="font-size:13px;color:var(--muted)">Points</div>
+                <div style="font-weight:700;font-size:20px" id="pointsDisplay">0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h3 style="margin:0 0 10px 0">How it works</h3>
+          <ul style="color:var(--muted);line-height:1.6;margin:8px 0 0 18px">
+            <li>Start the timer and complete tasks to earn points.</li>
+            <li>Each completed task gives points; finish within time for bonus.</li>
+            <li>Unlock badges at milestones; track your rank on the leaderboard.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <aside class="right-col">
+        <div class="card" style="display:flex;flex-direction:column;align-items:center;gap:12px">
+          <div class="ring" aria-hidden="true">
+            <svg width="220" height="220" viewBox="0 0 36 36">
+              <defs>
+                <linearGradient id="g1" x1="0%" x2="100%">
+                  <stop offset="0%" stop-color="#6C63FF" />
+                  <stop offset="100%" stop-color="#FF6CAB" />
+                </linearGradient>
+              </defs>
+              <path d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831" fill="none" stroke="rgba(255,255,255,0.04)"
+                stroke-width="2" />
+              <path id="scoreArc" d="M18 2.0845a15.9155 15.9155 0 1 0 0 31.831" fill="none" stroke="url(#g1)"
+                stroke-width="2" stroke-dasharray="0 100" stroke-linecap="round" />
+            </svg>
+            <div class="center" style="position:relative">
+              <div class="val" id="percentVal">0%</div>
+              <div style="font-size:12px;color:var(--muted)">Completion</div>
+            </div>
+          </div>
+
+          <div style="width:100%" class="card" aria-live="polite">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div><strong>Badges</strong>
+                <div style="font-size:12px;color:var(--muted)">Earned badges</div>
+              </div>
+              <div style="font-size:12px;color:var(--muted)">Milestones</div>
+            </div>
+            <div class="badges" id="badgesWrap">
+              <!-- badges populated by JS -->
+            </div>
+          </div>
+
+          <div class="card leader">
+            <strong>Leaderboard</strong>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Save your name and score</div>
+            <form id="leaderForm" onsubmit="return false;">
+              <input id="playerName" placeholder="Your name" />
+              <button id="saveScore">Save</button>
+            </form>
+            <div style="margin-top:10px" id="leaderList">
+              <!-- entries inserted here -->
+            </div>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    /* --------------- CONFIG --------------- */
+    const DEFAULT_TIMER_SECONDS = 20 * 60; // default 20 minutes
+    const TASKS = [
+      { id: 't1', title: 'Arm Range of Motion - 10 reps', desc: 'Follow the guided arm raises slowly.', points: 50 },
+      { id: 't2', title: 'Hand Grip Practice - 15 reps', desc: 'Squeeze and release a soft ball.', points: 40 },
+      { id: 't3', title: 'Ankle Flexion - 12 reps', desc: 'Gentle ankle rotations and lifts.', points: 45 },
+    ];
+    const BADGE_THRESHOLDS = [50, 120, 200]; // points needed to unlock badges
+    /* -------------------------------------- */
+
+    /* ---------- Storage helpers ---------- */
+    const STORAGE_KEY = 'remotion_gamestate_v1';
+    function loadState() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null;
+      } catch (e) { return null; }
+    }
+    function saveState(state) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+    /* -------------------------------------- */
+
+    /* ---------- initial state ---------- */
+    const initialState = {
+      playerName: localStorage.getItem('remotion_name') || 'Guest',
+      timerSec: DEFAULT_TIMER_SECONDS,
+      running: false,
+      lastStartAt: null,
+      tasks: TASKS.map(t => ({ ...t, done: false })),
+      points: 0,
+      badges: [], // indices unlocked
+      history: [] // timestamps of completions
+    };
+
+    let state = loadState() || initialState;
+    document.getElementById('playerNameHeader').innerText = state.playerName;
+
+    /* ---------- UI references ---------- */
+
+    const timerDisplay = document.getElementById('timerDisplay');
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const tasksList = document.getElementById('tasksList');
+    const progressFill = document.getElementById('progressFill');
+    const pointsDisplay = document.getElementById('pointsDisplay');
+    const percentVal = document.getElementById('percentVal');
+    const ringPath = document.getElementById('scoreArc');
+    const ringPathTop = document.getElementById('ringPath');
+    const badgesWrap = document.getElementById('badgesWrap');
+    const leaderForm = document.getElementById('leaderForm');
+    const playerNameInput = document.getElementById('playerName');
+    const saveScoreBtn = document.getElementById('saveScore');
+    const leaderList = document.getElementById('leaderList');
+    const resetAllBtn = document.getElementById('resetAll');
+    const addTaskForm = document.getElementById('add-task-form');
+    const newTaskTitleInput = document.getElementById('new-task-title');
+    const newTaskPointsInput = document.getElementById('new-task-points');
+
+    let intervalId = null;
+
+    /* ---------- helpers ---------- */
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = Math.floor(sec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+    function percentToDasharray(pct) {
+      // stroke-dasharray: "X 100"
+      return `${pct} 100`;
+    }
+
+    /* ---------- render UI ---------- */
+    // --- ADD THESE 2 NEW FUNCTIONS ---
+    function handleAddTask() {
+      const title = newTaskTitleInput.value.trim();
+      const points = parseInt(newTaskPointsInput.value) || 30; // Default 30 pts
+
+      if (!title) {
+        alert("Please enter a task title.");
+        return;
+      }
+
+      const newTask = {
+        id: 'user_task_' + Date.now(), // Unique ID
+        title: title,
+        desc: 'Custom task',
+        points: points,
+        done: false
+      };
+
+      // Add to state
+      state.tasks.push(newTask);
+
+      // Reset form
+      newTaskTitleInput.value = '';
+      newTaskPointsInput.value = '';
+
+      // Re-render and save
+      renderTasks();
+      updateProgress();
+      saveState(state);
+    }
+
+    function handleDeleteTask(taskId) {
+      // Remove from state by filtering
+      state.tasks = state.tasks.filter(t => t.id !== taskId);
+
+      // Re-render and save
+      renderTasks();
+      updateProgress();
+      saveState(state);
+    }
+
+    function renderTasks() {
+      tasksList.innerHTML = '';
+      state.tasks.forEach(task => {
+        const div = document.createElement('div');
+        div.className = 'task';
+
+        div.innerHTML = `
+  <input type="checkbox" id="${task.id}" ${task.done ? 'checked' : ''} />
+  <div class="meta">
+    <h4>${task.title}</h4>
+    <p>${task.desc}</p>
+  </div>
+  <div style="min-width:86px;text-align:right;color:var(--muted)">${task.points} pts</div>
+  ${task.id.startsWith('user_task_') ? `<button class="btn-delete-task" data-taskid="${task.id}" title="Delete Task">&times;</button>` : ''}
+`;
+
+        tasksList.appendChild(div);
+        const checkbox = div.querySelector('input');
+        checkbox.addEventListener('change', (e) => {
+          task.done = e.target.checked;
+          if (task.done) {
+            addPoints(task.points);
+            state.history.push({ task: task.id, at: Date.now() });
+          } else {
+            // if undone, remove points (soft)
+            addPoints(-task.points);
+          }
+          updateProgress();
+          checkBadges();
+          saveState(state);
+        });
+        const deleteBtn = div.querySelector('.btn-delete-task');
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', (e) => {
+        const taskId = e.currentTarget.dataset.taskid;
+        handleDeleteTask(taskId);
+      });
+    }
+      });
+    }
+
+    function updateTimerDisplay() {
+      timerDisplay.innerText = formatTime(state.timerSec);
+      const total = DEFAULT_TIMER_SECONDS;
+      const pct = Math.round(((total - state.timerSec) / total) * 100);
+      ringPathTop && ringPathTop.setAttribute('stroke-dasharray', percentToDasharray(pct));
+    }
+
+    function updateProgress() {
+      const completed = state.tasks.filter(t => t.done).length;
+      const pct = Math.round((completed / state.tasks.length) * 100);
+      progressFill.style.width = pct + '%';
+      percentVal.innerText = pct + '%';
+      ringPath.setAttribute('stroke-dasharray', percentToDasharray(pct));
+    }
+
+    /* ---------- points & badges ---------- */
+    function addPoints(n) {
+      state.points = Math.max(0, Math.round((state.points + n)));
+      pointsDisplay.innerText = state.points;
+      saveState(state);
+    }
+    function checkBadges() {
+      BADGE_THRESHOLDS.forEach((th, idx) => {
+        if (state.points >= th && !state.badges.includes(idx)) {
+          state.badges.push(idx);
+          // show confetti / popup
+          unlockBadge(idx);
+        }
+      });
+      renderBadges();
+      saveState(state);
+    }
+    function renderBadges() {
+      badgesWrap.innerHTML = '';
+      BADGE_THRESHOLDS.forEach((th, idx) => {
+        const unlocked = state.badges.includes(idx);
+        const el = document.createElement('div');
+        el.className = 'badge ' + (unlocked ? 'unlocked' : '');
+        el.innerHTML = unlocked ? `🏅<div style="font-size:10px">${th}+</div>` : `<div style="font-size:11px;color:var(--muted)">${th} pts</div>`;
+        badgesWrap.appendChild(el);
+      });
+    }
+    function unlockBadge(idx) {
+      // simple toast + confetti
+      spawnConfetti();
+      alert(`🎉 Badge unlocked: Milestone ${BADGE_THRESHOLDS[idx]} points!`);
+    }
+
+    /* ---------- timer control ---------- */
+    function startTimer() {
+      if (state.running) return;
+      state.running = true;
+      state.lastStartAt = Date.now();
+      saveState(state);
+      intervalId = setInterval(() => {
+        if (state.timerSec > 0) {
+          state.timerSec--;
+          updateTimerDisplay();
+          if (state.timerSec === 0) {
+            // end of timer: give bonus for completion fraction
+            const completed = state.tasks.filter(t => t.done).length;
+            const base = completed * 5; // small bonus per task
+            const timeBonus = Math.round((completed / state.tasks.length) * 50); // upto 50
+            addPoints(base + timeBonus);
+            checkBadges();
+            spawnConfetti();
+            alert('⏰ Challenge ended! Points awarded.');
+            clearInterval(intervalId);
+            state.running = false;
+            saveState(state);
+          }
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      if (intervalId) clearInterval(intervalId);
+      state.running = false;
+      saveState(state);
+    }
+
+    function resetTimer() {
+      if (intervalId) clearInterval(intervalId);
+      state.timerSec = DEFAULT_TIMER_SECONDS;
+      state.running = false;
+      state.lastStartAt = null;
+      saveState(state);
+      updateTimerDisplay();
+    }
+
+    /* ---------- leaderboard ---------- */
+    function renderLeaderBoard() {
+      const data = JSON.parse(localStorage.getItem('remotion_leaderboard') || '[]');
+      leaderList.innerHTML = data.slice(0, 5).map((r, i) => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,0.03)"><div>${i + 1}. ${r.name}</div><div style="color:var(--muted)">${r.points} pts</div></div>`).join('');
+    }
+    function saveScore() {
+      const name = playerNameInput.value.trim() || state.playerName || 'Guest';
+      const rows = JSON.parse(localStorage.getItem('remotion_leaderboard') || '[]');
+      rows.push({ name, points: state.points, at: Date.now() });
+      rows.sort((a, b) => b.points - a.points);
+      localStorage.setItem('remotion_leaderboard', JSON.stringify(rows));
+      localStorage.setItem('remotion_name', name);
+      document.getElementById('playerNameHeader').innerText = name;
+      alert('Saved to leaderboard!');
+      renderLeaderBoard();
+    }
+
+    /* ---------- confetti (simple) ---------- */
+    const confettiCanvas = document.getElementById('confetti');
+    confettiCanvas.width = window.innerWidth;
+    confettiCanvas.height = window.innerHeight;
+    const ctx = confettiCanvas.getContext('2d');
+    let confettiPieces = [];
+    function spawnConfetti() {
+      confettiPieces = [];
+      const count = 100;
+      for (let i = 0; i < count; i++) {
+        confettiPieces.push({
+          x: Math.random() * confettiCanvas.width,
+          y: Math.random() * confettiCanvas.height - confettiCanvas.height / 2,
+          size: (2 + Math.random() * 8),
+          speedY: 1 + Math.random() * 4,
+          speedX: -2 + Math.random() * 4,
+          color: i % 2 ? '#6C63FF' : '#FF6CAB',
+          rot: Math.random() * 360
+        });
+      }
+      requestAnimationFrame(confettiLoop);
+    }
+    function confettiLoop() {
+      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      for (const item of confettiPieces) {
+        ctx.save();
+        ctx.translate(item.x, item.y);
+        ctx.rotate(item.rot * Math.PI / 180);
+        ctx.fillStyle = item.color;
+        ctx.fillRect(-item.size / 2, -item.size / 2, item.size, item.size * 0.6);
+        ctx.restore();
+        item.y += item.speedY;
+        item.x += item.speedX;
+        item.rot += 4;
+      }
+      confettiPieces = confettiPieces.filter(p => p.y < confettiCanvas.height + 50);
+      if (confettiPieces.length > 0) requestAnimationFrame(confettiLoop);
+    }
+
+    /* ---------- initialization ---------- */
+    function init() {
+      // load values into UI
+      renderTasks();
+      updateTimerDisplay();
+      updateProgress();
+      pointsDisplay.innerText = state.points;
+      renderBadges();
+      renderLeaderBoard();
+      playerNameInput.value = localStorage.getItem('remotion_name') || '';
+    }
+    init();
+
+    /* ---------- events ---------- */
+    startBtn.addEventListener('click', () => { startTimer(); });
+    pauseBtn.addEventListener('click', () => { pauseTimer(); });
+    resetBtn.addEventListener('click', () => { resetTimer(); });
+    // --- ADD THIS LISTENER ---
+    addTaskForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      handleAddTask();
+    });
+
+    leaderForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveScore();
+    });
+    saveScoreBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      saveScore();
+    });
+    resetAllBtn.addEventListener('click', () => {
+      if (confirm('Reset all local progress and leaderboard?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem('remotion_leaderboard');
+        localStorage.removeItem('remotion_name');
+        location.reload();
+      }
+    });
+
+    /* small visual update loop for ring dash */
+    setInterval(() => {
+      const completed = state.tasks.filter(t => t.done).length;
+      const pct = Math.round((completed / state.tasks.length) * 100);
+      ringPath.setAttribute('stroke-dasharray', percentToDasharray(pct));
+      ringPathTop && ringPathTop.setAttribute('stroke-dasharray', percentToDasharray(Math.round(((DEFAULT_TIMER_SECONDS - state.timerSec) / DEFAULT_TIMER_SECONDS) * 100)));
+    }, 400);
+
+    /* ensure canvas resizes */
+    window.addEventListener('resize', () => {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    });
+  </script>
+  <a href="index.html" class="top-home-btn">
+    <i class="fas fa-home"></i>
+  </a>
+
+  <!-- Font Awesome for home icon (add only once per page) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</body>
+
+</html>
