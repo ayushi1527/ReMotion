@@ -10,5 +10,3 @@ uploads/
 # Other junk
 *.pyc
 
-#Node modules
-/node_modules/package-lock.json/npm-debug.log

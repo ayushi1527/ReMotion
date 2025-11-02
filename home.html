@@ -13,11 +13,31 @@
   </head>
   <body>
     <div class="galaxy-bg">
-      <script>
-        // --- AUTH CHECK & DISPLAY userName ---
-        document.addEventListener("DOMContentLoaded", () => {
-          const userName = localStorage.getItem("userName");
+      <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import {
+          getAuth,
+          onAuthStateChanged,
+          signOut,
+        } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
+        // Your Firebase config (replace with your own from Firebase Console)
+        const firebaseConfig = {
+          apiKey: "AIzaSyD6k5voxFW8Xfp1hD60H0bk8qxSxX1doLE",
+          authDomain: "remotion-bc981.firebaseapp.com",
+          projectId: "remotion-bc981",
+          storageBucket: "remotion-bc981.firebasestorage.app",
+          messagingSenderId: "661426663525",
+          appId: "1:661426663525:web:f9e2a30d242feb5f7d968c",
+          measurementId: "G-NWH9KE6Y0L",
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // ---- AUTH CHECK & DISPLAY userName ----
+        document.addEventListener("DOMContentLoaded", () => {
           const nav = document.createElement("div");
           nav.classList.add("navbar");
           nav.style.display = "flex";
@@ -29,60 +49,63 @@
           nav.style.color = "white";
           nav.style.fontFamily = "Poppins, sans-serif";
 
-          if (userName) {
-            // ✅ user is logged in
-            nav.innerHTML = `
-        <p>Welcome, <strong>${userName}</strong> </p>
-        <button id="logoutBtn" style="
-          margin-left: 15px;
-          padding: 5px 10px;
-          background: #ff7a7a;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;">Logout</button>
-      `;
-          } else {
-            // 🚫 user not logged in
-            nav.innerHTML = `
-            <a href="signup.html" style="
-          color: white; 
-          text-decoration: none;
-          padding: 8px 16px; 
-          background: #5A4DFE; /* A secondary accent color for Sign Up */
-          border-radius: 8px; 
-          font-weight: 600; 
-          transition: background 0.3s ease; 
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-          margin-right: 10px;"
-          onmouseover="this.style.background='#7B6FFF';"
-          onmouseout="this.style.background='#5A4DFE';"
-        >Sign Up</a>
-        <a href="login.html" style="
-          color: white; 
-          text-decoration: none;
-          padding: 8px 16px; 
-          background: #5A4DFE; 
-          border-radius: 8px; 
-          font-weight: 600; 
-          transition: background 0.3s ease; 
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);"
-          onmouseover="this.style.background='#7B6FFF';"
-          onmouseout="this.style.background='#5A4DFE';"
-        >Login</a>
-      `;
-          }
+          // 🔍 Listen for Firebase Auth state
+          onAuthStateChanged(auth, (user) => {
+            if (user) {
+              // ✅ user logged in
+              const userName = user.displayName || user.email.split("@")[0]; // show email name if no displayName
+              nav.innerHTML = `
+          <p>Welcome, <strong>${userName}</strong></p>
+          <button id="logoutBtn" style="
+            margin-left: 15px;
+            padding: 5px 10px;
+            background: #ff7a7a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;">Logout</button>
+        `;
+
+              // Handle logout
+              nav.querySelector("#logoutBtn").addEventListener("click", () => {
+                signOut(auth).then(() => {
+                  window.location.href = "login.html";
+                });
+              });
+            } else {
+              // 🚫 user not logged in
+              nav.innerHTML = `
+          <a href="signup.html" style="
+            color: white; 
+            text-decoration: none;
+            padding: 8px 16px; 
+            background: #5A4DFE; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            transition: background 0.3s ease; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            margin-right: 10px;"
+            onmouseover="this.style.background='#7B6FFF';"
+            onmouseout="this.style.background='#5A4DFE';"
+          >Sign Up</a>
+
+          <a href="login.html" style="
+            color: white; 
+            text-decoration: none;
+            padding: 8px 16px; 
+            background: #5A4DFE; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            transition: background 0.3s ease; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);"
+            onmouseover="this.style.background='#7B6FFF';"
+            onmouseout="this.style.background='#5A4DFE';"
+          >Login</a>
+        `;
+            }
+          });
 
           document.body.appendChild(nav);
-
-          // Logout handler
-          const logoutBtn = document.getElementById("logoutBtn");
-          if (logoutBtn) {
-            logoutBtn.addEventListener("click", () => {
-              localStorage.removeItem("userName");
-              window.location.reload();
-            });
-          }
         });
       </script>
     </div>

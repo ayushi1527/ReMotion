@@ -512,9 +512,12 @@
       </div>
       <nav>
         
-        <div style="color:var(--muted);font-size:13px;padding-right:8px">
-    Logged as <strong id="playerNameHeader">Guest</strong>
-</div>
+        <h2 id="loggedInText">Logged in as Guest</h2>
+
+  <script>
+    const username = localStorage.getItem("username") || "Guest";
+    document.getElementById("loggedInText").innerText = `Logged in as ${username}`;
+  </script>
         <button class="btn" id="resetAll" title="Reset all progress">Reset</button>
       </nav>
     </header>

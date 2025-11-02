@@ -53,56 +53,57 @@
       </p>
     </div>
 
-    <script>
-      const form = document.getElementById("signupForm");
-      const message = document.getElementById("signup-message");
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+      import { updateProfile } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const name = document.getElementById("name").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
+      const firebaseConfig = {
+        apiKey: "AIzaSyD6k5voxFW8Xfp1hD60H0bk8qxSxX1doLE",
+        authDomain: "remotion-bc981.firebaseapp.com",
+        projectId: "remotion-bc981",
+        storageBucket: "remotion-bc981.firebasestorage.app",
+        messagingSenderId: "661426663525",
+        appId: "1:661426663525:web:f9e2a30d242feb5f7d968c",
+        measurementId: "G-NWH9KE6Y0L",
+      };
 
-        // Basic client-side validation
-        if (password !== confirmPassword) {
-          message.textContent = "Passwords do not match.";
-          message.style.color = "red";
-          return;
-        }
-        if (password.length < 6) {
-          message.textContent = "Password must be at least 6 characters.";
-          message.style.color = "red";
-          return;
-        }
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
 
-        try {
-          // 🌟 Updated to /signup endpoint 🌟
-          const res = await fetch("http://localhost:3000/signup", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, password }),
-          });
+      // ✅ Wait until page loads
+      window.addEventListener("DOMContentLoaded", () => {
+        const signupForm = document.getElementById("signupForm");
 
-          const data = await res.json();
-          if (res.ok) {
-            message.textContent = `Success! Account created for ${data.name}. Redirecting to login...`;
-            message.style.color = "limegreen";
+        signupForm.addEventListener("submit", (e) => {
+          e.preventDefault(); // prevent reload
 
-            // Redirect user back to the login page after successful registration
-            setTimeout(() => {
-              window.location.href = "login.html";
-            }, 2000);
-          } else {
-            // This handles server-side errors (like email already exists)
-            message.textContent = data.message || "Sign up failed.";
-            message.style.color = "red";
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+          // ✅ Basic password check
+          if (password !== confirmPassword) {
+            alert("Passwords do not match!");
+            return;
           }
-        } catch (err) {
-          console.error("Fetch error:", err);
-          message.textContent = "Server not reachable.";
-          message.style.color = "red";
-        }
+
+          createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+              return updateProfile(userCredential.user, {
+                displayName: document.getElementById("name").value,
+              });
+            })
+            .then(() => {
+              alert("Account created successfully!");
+              window.location.href = "login.html";
+            })
+            .catch((error) => alert(error.message));
+        });
       });
     </script>
   </body>

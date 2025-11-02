@@ -43,7 +43,7 @@
       </p>
     </div>
 
-    <script>
+    <!-- <script>
       const form = document.getElementById("loginForm");
       const message = document.getElementById("login-message");
 
@@ -78,6 +78,76 @@
           message.style.color = "red";
         }
       });
-    </script>
+    </script> -->
+
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD6k5voxFW8Xfp1hD60H0bk8qxSxX1doLE",
+    authDomain: "remotion-bc981.firebaseapp.com",
+    projectId: "remotion-bc981",
+    storageBucket: "remotion-bc981.firebasestorage.app",
+    messagingSenderId: "661426663525",
+    appId: "1:661426663525:web:f9e2a30d242feb5f7d968c",
+    measurementId: "G-NWH9KE6Y0L"
+  };
+
+  // ✅ Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const userMap = {
+    "ayushi@gmail.com": "Ayushi",
+    "rahul@gmail.com": "Rahul",
+    "neha@gmail.com": "Neha",
+    "rohan@gmail.com": "Rohan",
+    "priya@gmail.com": "Priya",
+    "aman@gmail.com": "Aman",
+    "sneha@gmail.com": "Sneha",
+    "vikas@gmail.com": "Vikas",
+    "riya@gmail.com": "Riya",
+    "karan@gmail.com": "Karan"
+  };
+
+  // ✅ Wait for DOM before attaching listeners
+  window.addEventListener("DOMContentLoaded", () => {
+    const loginForm = document.getElementById("loginForm");
+    const loginMessage = document.getElementById("login-message");
+
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          const email = user.email;
+          const username = userMap[email] || "User";
+          user.username = username; // Attach username to user object
+          console.log("User logged in:", user);
+
+          loginMessage.textContent = "Login successful! Redirecting...";
+          loginMessage.style.color = "limegreen";
+
+          // Store user info locally
+          localStorage.setItem("username", username);
+
+          // Redirect after short delay
+          setTimeout(() => {
+            window.location.href = "home.html";
+          }, 1000);
+        })
+        .catch((error) => {
+          console.error(error);
+          loginMessage.textContent = "Login failed: " + error.message;
+          loginMessage.style.color = "red";
+        });
+    });
+  });
+</script>
+
   </body>
 </html>
