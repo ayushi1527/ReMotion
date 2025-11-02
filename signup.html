@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - ReMotion</title>
+    <!-- Assuming your style.css is linked here -->
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="galaxy-bg"></div>
+    <a href="home.html" class="top-home-btn">
+      <i class="fas fa-home"></i>
+    </a>
+
+    <div class="auth-container">
+      <h1 class="hero">
+        Join the <span style="color: #ff7b9c">ReMotion</span> Journey
+      </h1>
+      <div class="hero-subtext">
+        <p>Create your account and start your recovery today.</p>
+      </div>
+
+      <div class="auth-form">
+        <form id="signupForm">
+          <input type="text" id="name" placeholder="Full Name" required />
+          <input type="email" id="email" placeholder="Email" required />
+          <input
+            type="password"
+            id="password"
+            placeholder="Password (min 6 characters)"
+            required
+          />
+          <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Confirm Password"
+            required
+          />
+
+          <button type="submit" class="btn-primary">Sign Up</button>
+          <p id="signup-message" style="margin-top: 10px"></p>
+        </form>
+      </div>
+
+      <!-- Reversed link to go back to Login -->
+      <p style="margin-top: 15px" class="btn-signup-bar">
+        Already have an account? <a href="login.html">Log In</a>
+      </p>
+    </div>
+
+    <script>
+      const form = document.getElementById("signupForm");
+      const message = document.getElementById("signup-message");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+        // Basic client-side validation
+        if (password !== confirmPassword) {
+          message.textContent = "Passwords do not match.";
+          message.style.color = "red";
+          return;
+        }
+        if (password.length < 6) {
+          message.textContent = "Password must be at least 6 characters.";
+          message.style.color = "red";
+          return;
+        }
+
+        try {
+          // 🌟 Updated to /signup endpoint 🌟
+          const res = await fetch("http://localhost:3000/signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, password }),
+          });
+
+          const data = await res.json();
+          if (res.ok) {
+            message.textContent = `Success! Account created for ${data.name}. Redirecting to login...`;
+            message.style.color = "limegreen";
+
+            // Redirect user back to the login page after successful registration
+            setTimeout(() => {
+              window.location.href = "login.html";
+            }, 2000);
+          } else {
+            // This handles server-side errors (like email already exists)
+            message.textContent = data.message || "Sign up failed.";
+            message.style.color = "red";
+          }
+        } catch (err) {
+          console.error("Fetch error:", err);
+          message.textContent = "Server not reachable.";
+          message.style.color = "red";
+        }
+      });
+    </script>
+  </body>
+</html>

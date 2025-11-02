@@ -73,6 +73,15 @@ body {
   transform: scale(1.1);
   box-shadow: 0 0 35px #D04C9Caa;
 }
+.hero-subtext {
+  margin-top: 5px;
+  margin-bottom: 40px;
+  font-size: 1.1rem;
+  color: #DAD8FF;
+  opacity: 0.9;
+  display: flex;
+  justify-content: center;
+}
 
 /* FEATURES */
 .features {
@@ -668,4 +677,92 @@ footer {
 }
 .chat-form button:hover {
   filter: brightness(1.2);
+}
+
+/* --- Authentication section ---*/
+.auth-container{
+  display: flex; /* Enable Flexbox for its children */
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center children horizontally */
+    text-align: center; /* Ensure text inside is centered */
+    color: #fff;
+    padding: 20px; /* Add some padding just in case */
+    z-index: 10; /* Bring it above the background */
+}
+
+.auth-form {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2.5rem;
+  border-radius: 1.5rem;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  width: 320px;
+  text-align: center;
+  color: #fff;
+  animation: fadeIn 0.6s ease-in-out;
+}
+.auth-form h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.auth-form input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.auth-form input:focus {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+.btn-signup-bar {
+    /* Using the styles from .btn-secondary, but applied to the 'p' container */
+    background: transparent;
+    border: 2px solid #5A4DFEaa; /* Changed color to match the pink theme */
+    color: #EDEBFF;
+    padding: 10px 25px;
+    border-radius: 30px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    
+    /* Ensure it centers itself and has a minimum width */
+    display: inline-block; /* Allows centering via the parent .auth-container */
+    margin-top: 25px !important; /* Increase margin for better spacing */
+    
+    /* Make the text centered */
+    text-align: center;
+}
+
+/* Hover effect for the secondary button */
+.btn-signup-bar:hover {
+    color: #1a1a2e; /* Change text color to dark for contrast */
+    background: #5A4DFE;
+    box-shadow: 0 0 20px #5A4DFEaa;
+}
+
+/* Style for the 'Sign up' link inside the button */
+.btn-signup-bar a {
+    color: inherit; /* Inherit the color from the parent (.btn-signup-bar) */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Override for the link color on hover */
+.btn-signup-bar:hover a {
+    color: inherit; /* Ensures the link color changes with the button text color */
 }
